@@ -1,0 +1,10 @@
+{
+  "name": "daybalance-part1",
+  "private": true,
+  "version": "0.1.0",
+  "description": "DayBalance — Part 1 static HTML prototype",
+  "scripts": {
+    "start": "npx serve .",
+    "build": "node build.mjs"
+  }
+}
