@@ -1,10 +1,17 @@
 {
-  "name": "daybalance-part1",
+  "name": "daybalance",
   "private": true,
-  "version": "0.1.0",
-  "description": "DayBalance — Part 1 static HTML prototype",
+  "version": "0.2.0",
+  "description": "DayBalance — Healthy daily habit planner (Part 2: Express + MongoDB foundation)",
+  "main": "server/index.js",
   "scripts": {
-    "start": "npx serve .",
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
     "build": "node build.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.0"
   }
 }
