@@ -7,11 +7,21 @@ const connectDB = require('./config/db');
 const notFound = require('./middleware/notFound');
 const errorHandler = require('./middleware/errorHandler');
 const apiRoutes = require('./routes');
+const swaggerSpec = require('./config/swagger');
+const swaggerUi = require('swagger-ui-express');
 
 const app = express();
 
-// Parse JSON bodies (for future API endpoints).
+// Parse JSON bodies.
 app.use(express.json());
+
+// Swagger UI at /api/docs/
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Swagger JSON spec at /api/swagger.json
+app.get('/api/swagger.json', (req, res) => {
+  res.json(swaggerSpec);
+});
 
 // API routes — mounted under /api.
 app.use('/api', apiRoutes);
@@ -20,8 +30,7 @@ app.use('/api', apiRoutes);
 const staticRoot = path.join(__dirname, '..');
 app.use(express.static(staticRoot));
 
-// 404 for API routes only; let unknown non-API paths return the
-// default Express 404.
+// 404 for API routes only.
 app.use(notFound);
 
 // Centralised error handler (must be last).
