@@ -3,6 +3,7 @@ const router = express.Router();
 const ctrl = require('../controllers/tipController');
 const validate = require('../middleware/validate');
 const v = require('../middleware/validators');
+const {authenticate,adminOnly}=require('../middleware/auth');
 
 /**
  * @swagger
@@ -59,7 +60,7 @@ router.get('/:id', v.mongoIdParam(), validate, ctrl.getById);
  *       201: { description: Tip created, $ref: '#/components/schemas/HealthyTip' }
  *       400: { $ref: '#/components/responses/ValidationError' }
  */
-router.post('/', v.tipCreateRules, validate, ctrl.create);
+router.post('/',authenticate,adminOnly,v.tipCreateRules,validate,ctrl.create);
 
 /**
  * @swagger
@@ -79,7 +80,7 @@ router.post('/', v.tipCreateRules, validate, ctrl.create);
  *       400: { $ref: '#/components/responses/ValidationError' }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.put('/:id', v.mongoIdParam(), v.tipUpdateRules, validate, ctrl.update);
+router.put('/:id',authenticate,adminOnly,v.mongoIdParam(),v.tipUpdateRules,validate,ctrl.update);
 
 /**
  * @swagger
@@ -93,6 +94,6 @@ router.put('/:id', v.mongoIdParam(), v.tipUpdateRules, validate, ctrl.update);
  *       204: { description: Tip deleted }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.delete('/:id', v.mongoIdParam(), validate, ctrl.remove);
+router.delete('/:id',authenticate,adminOnly,v.mongoIdParam(),validate,ctrl.remove);
 
 module.exports = router;

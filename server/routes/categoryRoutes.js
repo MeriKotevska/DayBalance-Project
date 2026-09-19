@@ -3,6 +3,7 @@ const router = express.Router();
 const ctrl = require('../controllers/categoryController');
 const validate = require('../middleware/validate');
 const v = require('../middleware/validators');
+const {authenticate,adminOnly}=require('../middleware/auth');
 
 /**
  * @swagger
@@ -51,7 +52,7 @@ router.get('/:id', v.mongoIdParam(), validate, ctrl.getById);
  *       400: { $ref: '#/components/responses/ValidationError' }
  *       409: { $ref: '#/components/responses/Conflict' }
  */
-router.post('/', v.categoryCreateRules, validate, ctrl.create);
+router.post('/',authenticate,adminOnly,v.categoryCreateRules,validate,ctrl.create);
 
 /**
  * @swagger
@@ -71,7 +72,7 @@ router.post('/', v.categoryCreateRules, validate, ctrl.create);
  *       400: { $ref: '#/components/responses/ValidationError' }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.put('/:id', v.mongoIdParam(), v.categoryUpdateRules, validate, ctrl.update);
+router.put('/:id',authenticate,adminOnly,v.mongoIdParam(),v.categoryUpdateRules,validate,ctrl.update);
 
 /**
  * @swagger
@@ -85,6 +86,6 @@ router.put('/:id', v.mongoIdParam(), v.categoryUpdateRules, validate, ctrl.updat
  *       204: { description: Category deleted }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.delete('/:id', v.mongoIdParam(), validate, ctrl.remove);
+router.delete('/:id',authenticate,adminOnly,v.mongoIdParam(),validate,ctrl.remove);
 
 module.exports = router;

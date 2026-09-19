@@ -3,6 +3,7 @@ const router = express.Router();
 const ctrl = require('../controllers/completionController');
 const validate = require('../middleware/validate');
 const v = require('../middleware/validators');
+const {authenticate}=require('../middleware/auth');
 
 /**
  * @swagger
@@ -32,7 +33,7 @@ const v = require('../middleware/validators');
  *               type: array
  *               items: { $ref: '#/components/schemas/HabitCompletion' }
  */
-router.get('/', ctrl.list);
+router.get('/', authenticate, ctrl.list);
 
 /**
  * @swagger
@@ -46,7 +47,7 @@ router.get('/', ctrl.list);
  *       200: { description: The completion record, $ref: '#/components/schemas/HabitCompletion' }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.get('/:id', v.mongoIdParam(), validate, ctrl.getById);
+router.get('/:id', authenticate, v.mongoIdParam(), validate, ctrl.getById);
 
 /**
  * @swagger
@@ -64,7 +65,7 @@ router.get('/:id', v.mongoIdParam(), validate, ctrl.getById);
  *       400: { $ref: '#/components/responses/ValidationError' }
  *       409: { $ref: '#/components/responses/Conflict' }
  */
-router.post('/', v.completionCreateRules, validate, ctrl.create);
+router.post('/', authenticate, v.completionCreateRules, validate, ctrl.create);
 
 /**
  * @swagger
@@ -84,7 +85,7 @@ router.post('/', v.completionCreateRules, validate, ctrl.create);
  *       400: { $ref: '#/components/responses/ValidationError' }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.put('/:id', v.mongoIdParam(), v.completionUpdateRules, validate, ctrl.update);
+router.put('/:id', authenticate, v.mongoIdParam(), v.completionUpdateRules, validate, ctrl.update);
 
 /**
  * @swagger
@@ -98,6 +99,6 @@ router.put('/:id', v.mongoIdParam(), v.completionUpdateRules, validate, ctrl.upd
  *       204: { description: Completion deleted }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.delete('/:id', v.mongoIdParam(), validate, ctrl.remove);
+router.delete('/:id', authenticate, v.mongoIdParam(), validate, ctrl.remove);
 
 module.exports = router;

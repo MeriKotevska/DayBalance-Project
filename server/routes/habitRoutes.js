@@ -3,6 +3,7 @@ const router = express.Router();
 const ctrl = require('../controllers/habitController');
 const validate = require('../middleware/validate');
 const v = require('../middleware/validators');
+const {authenticate}=require('../middleware/auth');
 
 /**
  * @swagger
@@ -67,7 +68,7 @@ router.get('/:id', v.mongoIdParam(), validate, ctrl.getById);
  *       201: { description: Habit created, $ref: '#/components/schemas/Habit' }
  *       400: { $ref: '#/components/responses/ValidationError' }
  */
-router.post('/', v.habitCreateRules, validate, ctrl.create);
+router.post('/',authenticate,v.habitCreateRules,validate,ctrl.create);
 
 /**
  * @swagger
@@ -87,7 +88,7 @@ router.post('/', v.habitCreateRules, validate, ctrl.create);
  *       400: { $ref: '#/components/responses/ValidationError' }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.put('/:id', v.mongoIdParam(), v.habitUpdateRules, validate, ctrl.update);
+router.put('/:id',authenticate,v.mongoIdParam(),v.habitUpdateRules,validate,ctrl.update);
 
 /**
  * @swagger
@@ -101,6 +102,6 @@ router.put('/:id', v.mongoIdParam(), v.habitUpdateRules, validate, ctrl.update);
  *       204: { description: Habit deleted }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.delete('/:id', v.mongoIdParam(), validate, ctrl.remove);
+router.delete('/:id',authenticate,v.mongoIdParam(),validate,ctrl.remove);
 
 module.exports = router;

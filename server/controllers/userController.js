@@ -1,54 +1,6 @@
-const { User } = require('../models');
-
-exports.list = async (req, res, next) => {
-  try {
-    const users = await User.find().select('-password');
-    res.json(users);
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.getById = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.params.id).select('-password');
-    if (!user) return res.status(404).json({ error: 'NotFound', message: 'User not found.' });
-    res.json(user);
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.create = async (req, res, next) => {
-  try {
-    const user = await User.create(req.body);
-    const obj = user.toObject();
-    delete obj.password;
-    res.status(201).json(obj);
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.update = async (req, res, next) => {
-  try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    }).select('-password');
-    if (!user) return res.status(404).json({ error: 'NotFound', message: 'User not found.' });
-    res.json(user);
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.remove = async (req, res, next) => {
-  try {
-    const result = await User.findByIdAndDelete(req.params.id);
-    if (!result) return res.status(404).json({ error: 'NotFound', message: 'User not found.' });
-    res.status(204).end();
-  } catch (err) {
-    next(err);
-  }
-};
+const bcrypt=require('bcryptjs');const {User}=require('../models');
+exports.list=async(req,res,next)=>{try{res.json(await User.find().select('-password'))}catch(e){next(e)}};
+exports.getById=async(req,res,next)=>{try{const u=await User.findById(req.params.id).select('-password');if(!u)return res.status(404).json({error:'NotFound',message:'User not found.'});res.json(u)}catch(e){next(e)}};
+exports.create=async(req,res,next)=>{try{const u=new User(req.body);await u.save();res.status(201).json(await User.findById(u._id).select('-password'))}catch(e){next(e)}};
+exports.update=async(req,res,next)=>{try{const data={...req.body};if(data.password)data.password=await bcrypt.hash(data.password,10);const u=await User.findByIdAndUpdate(req.params.id,data,{new:true,runValidators:true}).select('-password');if(!u)return res.status(404).json({error:'NotFound',message:'User not found.'});res.json(u)}catch(e){next(e)}};
+exports.remove=async(req,res,next)=>{try{const u=await User.findByIdAndDelete(req.params.id);if(!u)return res.status(404).json({error:'NotFound',message:'User not found.'});res.status(204).end()}catch(e){next(e)}};

@@ -1,0 +1,6 @@
+const bcrypt=require('bcryptjs');const jwt=require('jsonwebtoken');const {User}=require('../models');
+const safe=u=>({_id:u._id,name:u.name,email:u.email,role:u.role,createdAt:u.createdAt});
+const sign=u=>jwt.sign({id:String(u._id),name:u.name,email:u.email,role:u.role},process.env.JWT_SECRET||'daybalance-dev-secret',{expiresIn:'8h'});
+exports.register=async(req,res,next)=>{try{const exists=await User.findOne({email:req.body.email});if(exists)return res.status(409).json({error:'Conflict',message:'Email is already registered.'});const password=await bcrypt.hash(req.body.password,10);const u=await User.create({name:req.body.name,email:req.body.email,password,role:'user'});res.status(201).json({token:sign(u),user:safe(u)});}catch(e){next(e)}};
+exports.login=async(req,res,next)=>{try{const u=await User.findOne({email:req.body.email});if(!u||!(await bcrypt.compare(req.body.password,u.password)))return res.status(401).json({error:'Unauthorized',message:'Invalid email or password.'});res.json({token:sign(u),user:safe(u)});}catch(e){next(e)}};
+exports.me=async(req,res,next)=>{try{const u=await User.findById(req.user.id).select('-password');if(!u)return res.status(404).json({error:'NotFound',message:'User not found.'});res.json(u)}catch(e){next(e)}};

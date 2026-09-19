@@ -44,7 +44,7 @@ function errorHandler(err, req, res, next) {
     message = 'Internal server error.';
   }
 
-  if (req.path.startsWith('/api/')) {
+  if ((req.originalUrl || req.path).startsWith('/api/')) {
     const body = { error: err.name || 'Error', message };
     if (details) body.details = details;
     return res.status(status).json(body);

@@ -1,27 +1,21 @@
 services:
   app:
     build: .
-    ports:
-      - "3000:3000"
+    ports: ["3000:3000"]
     environment:
-      - MONGODB_URI=mongodb://mongo:27017/daybalance
-      - PORT=3000
-      - NODE_ENV=development
+      MONGODB_URI: mongodb://mongo:27017/daybalance
+      PORT: 3000
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET:-daybalance-local-demo-secret}
     depends_on:
-      mongo:
-        condition: service_healthy
-
+      mongo: {condition: service_healthy}
   mongo:
     image: mongo:7
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
+    ports: ["27017:27017"]
+    volumes: ["mongo-data:/data/db"]
     healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      test: ["CMD","mongosh","--quiet","--eval","db.adminCommand('ping').ok"]
       interval: 10s
       timeout: 5s
       retries: 5
-
-volumes:
-  mongo-data:
+volumes: {mongo-data: {}}

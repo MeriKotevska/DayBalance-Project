@@ -1,0 +1,4 @@
+const jwt=require('jsonwebtoken');
+function authenticate(req,res,next){const h=req.headers.authorization||'';const token=h.startsWith('Bearer ')?h.slice(7):null;if(!token)return res.status(401).json({error:'Unauthorized',message:'Authentication required.'});try{req.user=jwt.verify(token,process.env.JWT_SECRET||'daybalance-dev-secret');next();}catch(e){return res.status(401).json({error:'Unauthorized',message:'Invalid or expired token.'});}}
+function adminOnly(req,res,next){if(req.user?.role!=='admin')return res.status(403).json({error:'Forbidden',message:'Administrator access required.'});next();}
+module.exports={authenticate,adminOnly};

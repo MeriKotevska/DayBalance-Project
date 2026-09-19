@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ctrl = require('../controllers/dbController');
+const {authenticate,adminOnly}=require('../middleware/auth');
 
 /**
  * @swagger
@@ -18,7 +19,7 @@ const ctrl = require('../controllers/dbController');
  *               properties:
  *                 message: { type: string }
  */
-router.post('/reset', ctrl.reset);
+router.post('/reset',authenticate,adminOnly,ctrl.reset);
 
 /**
  * @swagger
@@ -38,7 +39,7 @@ router.post('/reset', ctrl.reset);
  *                 counts: { type: object }
  *       409: { $ref: '#/components/responses/Conflict' }
  */
-router.post('/seed', ctrl.seed);
+router.post('/seed',authenticate,adminOnly,ctrl.seed);
 
 /**
  * @swagger
@@ -57,6 +58,6 @@ router.post('/seed', ctrl.seed);
  *                 message: { type: string }
  *                 seed: { type: object }
  */
-router.post('/reset-and-seed', ctrl.resetAndSeed);
+router.post('/reset-and-seed',authenticate,adminOnly,ctrl.resetAndSeed);
 
 module.exports = router;

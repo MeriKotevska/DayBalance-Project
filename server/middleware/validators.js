@@ -110,7 +110,6 @@ const habitCreateRules = [
     .isLength({ max: 500 })
     .withMessage('Description cannot exceed 500 characters.'),
   requiredMongoIdBody('category'),
-  requiredMongoIdBody('owner'),
   body('timeOfDay')
     .optional()
     .isIn(['morning', 'afternoon', 'evening', 'anytime'])
@@ -179,7 +178,7 @@ const habitUpdateRules = [
 // ── HabitCompletion ──
 const completionCreateRules = [
   requiredMongoIdBody('habit'),
-  requiredMongoIdBody('user'),
+  optionalMongoIdBody('user'),
   body('date')
     .optional()
     .isISO8601()

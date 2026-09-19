@@ -1,0 +1,1 @@
+class Base{constructor(d={}){Object.assign(this,d)}}export class User extends Base{}export class Category extends Base{}export class Habit extends Base{}export class HabitCompletion extends Base{}export class HealthyTip extends Base{}export class ActivityHistory extends Base{}

@@ -3,6 +3,7 @@ const router = express.Router();
 const ctrl = require('../controllers/activityController');
 const validate = require('../middleware/validate');
 const v = require('../middleware/validators');
+const {authenticate,adminOnly}=require('../middleware/auth');
 
 /**
  * @swagger
@@ -28,7 +29,7 @@ const v = require('../middleware/validators');
  *               type: array
  *               items: { $ref: '#/components/schemas/ActivityHistory' }
  */
-router.get('/', ctrl.list);
+router.get('/',authenticate,adminOnly,ctrl.list);
 
 /**
  * @swagger
@@ -42,7 +43,7 @@ router.get('/', ctrl.list);
  *       200: { description: The activity record, $ref: '#/components/schemas/ActivityHistory' }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.get('/:id', v.mongoIdParam(), validate, ctrl.getById);
+router.get('/:id',authenticate,adminOnly,v.mongoIdParam(),validate,ctrl.getById);
 
 /**
  * @swagger
@@ -59,7 +60,7 @@ router.get('/:id', v.mongoIdParam(), validate, ctrl.getById);
  *       201: { description: Activity created, $ref: '#/components/schemas/ActivityHistory' }
  *       400: { $ref: '#/components/responses/ValidationError' }
  */
-router.post('/', v.activityCreateRules, validate, ctrl.create);
+router.post('/',authenticate,adminOnly,v.activityCreateRules,validate,ctrl.create);
 
 /**
  * @swagger
@@ -79,7 +80,7 @@ router.post('/', v.activityCreateRules, validate, ctrl.create);
  *       400: { $ref: '#/components/responses/ValidationError' }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.put('/:id', v.mongoIdParam(), v.activityUpdateRules, validate, ctrl.update);
+router.put('/:id',authenticate,adminOnly,v.mongoIdParam(),v.activityUpdateRules,validate,ctrl.update);
 
 /**
  * @swagger
@@ -93,6 +94,6 @@ router.put('/:id', v.mongoIdParam(), v.activityUpdateRules, validate, ctrl.updat
  *       204: { description: Activity deleted }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.delete('/:id', v.mongoIdParam(), validate, ctrl.remove);
+router.delete('/:id',authenticate,adminOnly,v.mongoIdParam(),validate,ctrl.remove);
 
 module.exports = router;

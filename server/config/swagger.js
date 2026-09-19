@@ -5,15 +5,16 @@ const options = {
     openapi: '3.0.0',
     info: {
       title: 'DayBalance API',
-      version: '1.0.0',
+      version: '1.1.0',
       description:
         'REST API for the DayBalance healthy daily habit planner. ' +
-        'Part 3 of the university Web Programming project.',
+        'Full REST API for the DayBalance university Web Programming project.',
     },
     servers: [
-      { url: '/', description: 'DayBalance API' },
+      { url: '/', description: 'DayBalance application' },
     ],
     components: {
+      securitySchemes: { bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' } },
       parameters: {
         IdParam: {
           name: 'id',
@@ -50,6 +51,8 @@ const options = {
         },
       },
       schemas: {
+        AuthLogin: { type: 'object', required: ['email','password'], properties: { email: {type:'string',format:'email'}, password:{type:'string'} } },
+        AuthRegister: { type: 'object', required: ['name','email','password'], properties: { name:{type:'string'}, email:{type:'string',format:'email'}, password:{type:'string',minLength:6} } },
         Error: {
           type: 'object',
           properties: {

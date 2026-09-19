@@ -3,6 +3,7 @@ const router = express.Router();
 const ctrl = require('../controllers/userController');
 const validate = require('../middleware/validate');
 const v = require('../middleware/validators');
+const {authenticate,adminOnly}=require('../middleware/auth');
 
 /**
  * @swagger
@@ -19,7 +20,7 @@ const v = require('../middleware/validators');
  *               type: array
  *               items: { $ref: '#/components/schemas/User' }
  */
-router.get('/', ctrl.list);
+router.get('/',authenticate,adminOnly,ctrl.list);
 
 /**
  * @swagger
@@ -33,7 +34,7 @@ router.get('/', ctrl.list);
  *       200: { description: The user, $ref: '#/components/schemas/User' }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.get('/:id', v.mongoIdParam(), validate, ctrl.getById);
+router.get('/:id',authenticate,adminOnly,v.mongoIdParam(),validate,ctrl.getById);
 
 /**
  * @swagger
@@ -51,7 +52,7 @@ router.get('/:id', v.mongoIdParam(), validate, ctrl.getById);
  *       400: { $ref: '#/components/responses/ValidationError' }
  *       409: { $ref: '#/components/responses/Conflict' }
  */
-router.post('/', v.userCreateRules, validate, ctrl.create);
+router.post('/',authenticate,adminOnly,v.userCreateRules,validate,ctrl.create);
 
 /**
  * @swagger
@@ -71,7 +72,7 @@ router.post('/', v.userCreateRules, validate, ctrl.create);
  *       400: { $ref: '#/components/responses/ValidationError' }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.put('/:id', v.mongoIdParam(), v.userUpdateRules, validate, ctrl.update);
+router.put('/:id',authenticate,adminOnly,v.mongoIdParam(),v.userUpdateRules,validate,ctrl.update);
 
 /**
  * @swagger
@@ -85,6 +86,6 @@ router.put('/:id', v.mongoIdParam(), v.userUpdateRules, validate, ctrl.update);
  *       204: { description: User deleted }
  *       404: { $ref: '#/components/responses/NotFound' }
  */
-router.delete('/:id', v.mongoIdParam(), validate, ctrl.remove);
+router.delete('/:id',authenticate,adminOnly,v.mongoIdParam(),validate,ctrl.remove);
 
 module.exports = router;
