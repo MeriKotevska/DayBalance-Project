@@ -60,4 +60,13 @@ Environment variables: `MONGODB_URI`, `PORT`, `NODE_ENV`, `JWT_SECRET`.
 The React `/db` screen calls `POST /api/db/reset`, `/api/db/seed`, and `/api/db/reset-and-seed`. These operations require an authenticated admin JWT.
 
 ## Deployment
-Cloud deployment is intentionally not claimed as complete yet. Production deployment and cross-browser verification are the final project steps.
+DayBalance is deployed publicly using Render, with MongoDB Atlas as the production database.
+
+Live application: https://daybalance.onrender.com
+
+Production setup:
+- React/Vite client is built as part of the Docker image.
+- Express serves the production SPA and REST API.
+- MongoDB Atlas provides the cloud database.
+- Production configuration uses environment variables for `MONGODB_URI`, `NODE_ENV`, and `JWT_SECRET`.
+- The application was tested in Google Chrome, Microsoft Edge, and Mozilla Firefox.
